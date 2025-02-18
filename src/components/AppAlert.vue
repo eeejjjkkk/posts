@@ -1,29 +1,29 @@
 <template>
-  <transition name="slide">
+  <!-- <transition name="slide">
     <div v-if="show" class="app-alert alert" :class="typeStyle" role="alert">
       {{message}}
     </div>
-  </transition>
+  </transition> -->
+  <div class="app-alert">
+    <transition-group>
+      <div v-for="({message, type}, index) in items"
+      :key="index"
+      class="alert"
+      :class="typeStyle(type)"
+      role="alert"
+      >
+        {{ message }}
+      </div>
+    </transition-group>
+  </div>
 </template>
 
 <script setup>
-import {computed} from '@vue/reactivity';
-const props = defineProps({
-  show: {
-    type: Boolean,
-    default: false,
-  },
-  message: {
-    type: String,
-    required: true,
-  },
-  type: {
-    type: String,
-    default: 'error',
-    validator: value => ['success', 'error'].includes(value),
-  },
-})
-const typeStyle = computed(()=> props.type === 'error' ? 'alert-danger' : 'alert-primary')
+import { computed } from '@vue/reactivity';
+defineProps({
+  items: Array,
+});
+const typeStyle = type => (type === 'error' ? 'alert-danger' : 'alert-primary');
 </script>
 
 <style scoped>
